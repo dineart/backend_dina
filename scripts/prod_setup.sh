@@ -31,7 +31,7 @@ docker compose -f docker-compose.prod.yml build --no-cache
 echo "Issue Certificate for SSL..."
 docker compose run --rm certbot certonly \ 
     --webroot -w /var/www/certbot \ 
-    -d api-pegawai-4a.akufarish.my.id \
+    -d api-keuangan-4a.akufarish.my.id \
     --email $EMAIL \
     --agree-tos \
     --no-eff-email
