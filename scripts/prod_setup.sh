@@ -1,6 +1,6 @@
 #!/bin/bash
-DOMAIN="domain.my.id"
-EMAIL="john@doe.com"
+DOMAIN="api-keuangan-4a.akufarish.my.id"
+EMAIL="di2601na@gmail.com"
 DATA_PATH="data"
 NGINX_CONF_DIR="docker/nginx"
 
