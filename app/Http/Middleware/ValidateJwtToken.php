@@ -19,7 +19,7 @@ class ValidateJwtToken
                 'message' => 'Token tidak ditemukan, silakan login terlebih dahulu'
             ], 401);
         }
-
+    
         try {
             $secret = env('JWT_SECRET');
             $decoded = JWT::decode($token, new Key($secret, 'HS256'));
