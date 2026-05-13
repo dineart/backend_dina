@@ -21,16 +21,8 @@ class ValidateJwtToken
         }
 
         try {
-            $secret = 'INISECRET#KHUSUSTESTINGAJAHFWMA>FA403t3womwjogh';
+            $secret = env('JWT_SECRET');
             $decoded = JWT::decode($token, new Key($secret, 'HS256'));
-
-            // Cek role harus admin-keuangan
-            if ($decoded->role_name !== 'admin-keuangan') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Akses ditolak, role tidak sesuai'
-                ], 403);
-            }
 
             // Simpan data user ke request
             $request->merge(['auth_user' => (array) $decoded]);
