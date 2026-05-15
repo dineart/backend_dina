@@ -17,7 +17,7 @@ jobs:
           script: |
             cd /root/kelompok4/backend_dina
             
-            git pull stash
+            git stash
             git pull origin main
             
             docker compose -f docker-compose.prod.yml exec -T php composer install --no-interaction --prefer-dist --optimize-autoloader
