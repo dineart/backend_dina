@@ -1,0 +1,27 @@
+name: Deploy API to PBL VPS KELOMPOK 4
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy-to-vps-pbl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy di PBL VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_KELOMPOK4 }}
+          script: |
+            cd /root/kelompok4/backend_dina
+            
+            git pull stash
+            git pull origin main
+            
+            docker compose -f docker-compose.prod.yml exec -T php composer install --no-interaction --prefer-dist --optimize-autoloader
+            
+            docker compose -f docker-compose.prod.yml exec -T php php artisan migrate --force
+            
+            docker compose -f docker-compose.prod.yml exec -T php php artisan optimize:clear
