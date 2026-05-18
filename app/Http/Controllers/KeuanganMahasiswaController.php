@@ -70,4 +70,30 @@ class KeuanganMahasiswaController extends Controller
         $data->delete();
         return response()->json(['success' => true, 'message' => 'Data keuangan mahasiswa berhasil dihapus']);
     }
+
+    public function statusAktif($id_mahasiswa)
+    {
+        $data = KeuanganMahasiswa::with('kategoriUkt', 'beasiswa')
+                ->where('ID_MAHASISWA', $id_mahasiswa)
+                ->first();
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data mahasiswa tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'ID_MAHASISWA' => $data->ID_MAHASISWA,
+                'STATUS_AKTIF' => $data->STATUS_AKTIF,
+                'SEMESTER'     => $data->SEMESTER,
+                'KATEGORI_UKT' => $data->kategoriUkt->GOLONGAN_UKT ?? null,
+                'NOMINAL_UKT'  => $data->kategoriUkt->NOMINAL_UKT ?? null,
+                'BEASISWA'     => $data->beasiswa->NAMA_BEASISWA ?? null,
+            ]
+        ]);
+    }
 }
