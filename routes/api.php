@@ -15,4 +15,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::apiResource('tagihan', TagihanController::class);
     Route::apiResource('metode-bayar', MetodeBayarController::class);
     Route::apiResource('transaksi-pembayaran', TransaksiPembayaranController::class);
+
+    //endpoint untuk kelompok3 cek status aktif mahasiswa
+    Route::get('status-aktif/{id_mahasiswa}', [KeuanganMahasiswaController::class, 'statusAktif']);
 });
