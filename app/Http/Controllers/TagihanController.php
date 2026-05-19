@@ -21,11 +21,11 @@ class TagihanController extends Controller
             'NOMOR_CICILAN'    => 'nullable|integer',
             'TOTAL_CICILAN'    => 'nullable|integer',
             'NOMINAL_CICILAN'  => 'nullable|numeric',
-            'DENDA'            => 'nullable|numeric',
             'POTONGAN'         => 'nullable|numeric',
             'TOTAL_TAGIHAN'    => 'required|numeric',
             'TGL_JATUH_TEMPO'  => 'nullable|date',
             'TGL_TAGIHAN'      => 'nullable|date',
+            'TGL_TRANSAKSI'    => 'nullable|date',
             'STATUS_BAYAR'     => 'required|max:25',
         ]);
 

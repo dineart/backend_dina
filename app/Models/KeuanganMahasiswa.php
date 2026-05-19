@@ -19,17 +19,13 @@ class KeuanganMahasiswa extends Model
         'ID_BEASISWA',
         'ID_MAHASISWA',
         'SEMESTER',
+        'BEASISWA',
         'STATUS_AKTIF',
     ];
 
     public function kategoriUkt()
     {
         return $this->belongsTo(KategoriUkt::class, 'ID_KATEGORI', 'ID_KATEGORI');
-    }
-
-    public function beasiswa()
-    {
-        return $this->belongsTo(Beasiswa::class, 'ID_BEASISWA', 'ID_BEASISWA');
     }
 
     public function tagihan()

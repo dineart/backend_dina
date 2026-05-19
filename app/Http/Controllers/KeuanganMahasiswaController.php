@@ -17,9 +17,10 @@ class KeuanganMahasiswaController extends Controller
         $request->validate([
             'ID_KEUANGAN_MHS' => 'required|unique:KEUANGAN_MAHASISWA,ID_KEUANGAN_MHS|max:20',
             'ID_KATEGORI'     => 'required|exists:KATEGORI_UKT,ID_KATEGORI',
-            'ID_BEASISWA'     => 'nullable|exists:BEASISWA,ID_BEASISWA',
             'ID_MAHASISWA'    => 'required|max:25',
-            'STATUS_AKTIF'    => 'required|max:15',
+            'SEMESTER'        => 'required|max:15',
+            'BEASISWA'        => 'nullable|max:20',
+            'STATUS_AKTIF'    => 'required|max:20',
         ]);
 
         $data = KeuanganMahasiswa::create($request->all());
@@ -48,9 +49,10 @@ class KeuanganMahasiswaController extends Controller
 
         $request->validate([
             'ID_KATEGORI'  => 'sometimes|exists:KATEGORI_UKT,ID_KATEGORI',
-            'ID_BEASISWA'  => 'nullable|exists:BEASISWA,ID_BEASISWA',
             'ID_MAHASISWA' => 'sometimes|max:25',
-            'STATUS_AKTIF' => 'sometimes|max:15',
+            'SEMESTER'     => 'sometimes|max:15',
+            'BEASISWA'     => 'sometimes|max:20',
+            'STATUS_AKTIF' => 'sometimes|max:20',
         ]);
 
         $data->update($request->all());
