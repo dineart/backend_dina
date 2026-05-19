@@ -8,7 +8,7 @@ class KeuanganMahasiswaController extends Controller
 {
     public function index()
     {
-        $data = KeuanganMahasiswa::with('kategoriUkt', 'beasiswa')->get();
+        $data = KeuanganMahasiswa::with('kategoriUkt')->get();
         return response()->json(['success' => true, 'data' => $data]);
     }
 
@@ -17,7 +17,7 @@ class KeuanganMahasiswaController extends Controller
         $request->validate([
             'ID_KEUANGAN_MHS' => 'required|unique:KEUANGAN_MAHASISWA,ID_KEUANGAN_MHS|max:20',
             'ID_KATEGORI'     => 'required|exists:KATEGORI_UKT,ID_KATEGORI',
-            'ID_MAHASISWA'    => 'required|max:25',
+            'ID_MAHASISWA'    => 'required|max:20',
             'SEMESTER'        => 'required|max:15',
             'BEASISWA'        => 'nullable|max:20',
             'STATUS_AKTIF'    => 'required|max:20',
@@ -33,7 +33,7 @@ class KeuanganMahasiswaController extends Controller
 
     public function show($id)
     {
-        $data = KeuanganMahasiswa::with('kategoriUkt', 'beasiswa', 'tagihan')->find($id);
+        $data = KeuanganMahasiswa::with('kategoriUkt', 'tagihan')->find($id);
         if (!$data) {
             return response()->json(['success' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
@@ -49,9 +49,9 @@ class KeuanganMahasiswaController extends Controller
 
         $request->validate([
             'ID_KATEGORI'  => 'sometimes|exists:KATEGORI_UKT,ID_KATEGORI',
-            'ID_MAHASISWA' => 'sometimes|max:25',
+            'ID_MAHASISWA' => 'sometimes|max:20',
             'SEMESTER'     => 'sometimes|max:15',
-            'BEASISWA'     => 'sometimes|max:20',
+            'BEASISWA'     => 'nullable|max:20',
             'STATUS_AKTIF' => 'sometimes|max:20',
         ]);
 
@@ -75,7 +75,7 @@ class KeuanganMahasiswaController extends Controller
 
     public function statusAktif($id_mahasiswa)
     {
-        $data = KeuanganMahasiswa::with('kategoriUkt', 'beasiswa')
+        $data = KeuanganMahasiswa::with('kategoriUkt')
                 ->where('ID_MAHASISWA', $id_mahasiswa)
                 ->first();
 
@@ -92,9 +92,9 @@ class KeuanganMahasiswaController extends Controller
                 'ID_MAHASISWA' => $data->ID_MAHASISWA,
                 'STATUS_AKTIF' => $data->STATUS_AKTIF,
                 'SEMESTER'     => $data->SEMESTER,
+                'BEASISWA'     => $data->BEASISWA,
                 'KATEGORI_UKT' => $data->kategoriUkt->GOLONGAN_UKT ?? null,
                 'NOMINAL_UKT'  => $data->kategoriUkt->NOMINAL_UKT ?? null,
-                'BEASISWA'     => $data->beasiswa->NAMA_BEASISWA ?? null,
             ]
         ]);
     }
