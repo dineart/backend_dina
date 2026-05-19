@@ -54,4 +54,34 @@ class KategoriUktController extends Controller
         $data->delete();
         return response()->json(['success' => true, 'message' => 'Kategori UKT berhasil dihapus']);
     }
+
+    public function storeMany(Request $request)
+{
+    $data = $request->all();
+
+    // Validasi setiap item
+    foreach ($data as $item) {
+        validator($item, [
+            'ID_KATEGORI'  => 'required|max:20',
+            'ID_PRODI'     => 'required|max:20',
+            'JENJANG'      => 'required|max:20',
+            'GOLONGAN_UKT' => 'required|max:15',
+            'NOMINAL_UKT'  => 'required|numeric',
+        ])->validate();
+    }
+
+    $inserted = [];
+    foreach ($data as $item) {
+        $inserted[] = KategoriUkt::updateOrCreate(
+            ['ID_KATEGORI' => $item['ID_KATEGORI']],
+            $item
+        );
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => count($inserted) . ' data kategori UKT berhasil ditambahkan',
+        'data'    => $inserted
+    ], 201);
+}
 }
