@@ -12,6 +12,35 @@ class KategoriUktController extends Controller
 
     public function store(Request $request)
     {
+    // Cek apakah request berupa array atau single object
+    $isArray = array_is_list($request->all());
+
+    if ($isArray) {
+        // Insert banyak sekaligus
+        $inserted = [];
+        foreach ($request->all() as $item) {
+            validator($item, [
+                'ID_KATEGORI'  => 'required|max:20',
+                'ID_PRODI'     => 'required|max:20',
+                'JENJANG'      => 'required|max:20',
+                'GOLONGAN_UKT' => 'required|max:15',
+                'NOMINAL_UKT'  => 'required|numeric',
+            ])->validate();
+
+            $inserted[] = KategoriUkt::updateOrCreate(
+                ['ID_KATEGORI' => $item['ID_KATEGORI']],
+                $item
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => count($inserted) . ' data kategori UKT berhasil ditambahkan',
+            'data'    => $inserted
+        ], 201);
+
+    } else {
+        // Insert satu data
         $request->validate([
             'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
             'ID_PRODI'     => 'required|max:20',
@@ -21,8 +50,13 @@ class KategoriUktController extends Controller
         ]);
 
         $data = KategoriUkt::create($request->all());
-        return response()->json(['success' => true, 'message' => 'Kategori UKT berhasil ditambahkan', 'data' => $data], 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Kategori UKT berhasil ditambahkan',
+            'data'    => $data
+        ], 201);
     }
+}
 
     public function show($id)
     {
