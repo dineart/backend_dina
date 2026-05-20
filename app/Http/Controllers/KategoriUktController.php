@@ -12,25 +12,21 @@ class KategoriUktController extends Controller
 
     public function store(Request $request)
     {
-    // Cek apakah request berupa array atau single object
     $isArray = array_is_list($request->all());
 
     if ($isArray) {
-        // Insert banyak sekaligus
         $inserted = [];
         foreach ($request->all() as $item) {
+            // Validasi termasuk cek ID duplikat
             validator($item, [
-                'ID_KATEGORI'  => 'required|max:20',
+                'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
                 'ID_PRODI'     => 'required|max:20',
                 'JENJANG'      => 'required|max:20',
                 'GOLONGAN_UKT' => 'required|max:15',
                 'NOMINAL_UKT'  => 'required|numeric',
             ])->validate();
 
-            $inserted[] = KategoriUkt::updateOrCreate(
-                ['ID_KATEGORI' => $item['ID_KATEGORI']],
-                $item
-            );
+            $inserted[] = KategoriUkt::create($item);
         }
 
         return response()->json([
@@ -40,7 +36,6 @@ class KategoriUktController extends Controller
         ], 201);
 
     } else {
-        // Insert satu data
         $request->validate([
             'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
             'ID_PRODI'     => 'required|max:20',

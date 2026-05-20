@@ -10,8 +10,6 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::apiResource('keuangan-mahasiswa', KeuanganMahasiswaController::class);
     Route::apiResource('tagihan', TagihanController::class);
     
-    //Tambah banyak kategori UKT sekaligus
-    Route::post('kategori-ukt-bulk', [KategoriUktController::class, 'storeMany']);
     // Endpoint untuk kelompok lain
     Route::get('status-aktif/{id_mahasiswa}', [KeuanganMahasiswaController::class, 'statusAktif']);
 });
