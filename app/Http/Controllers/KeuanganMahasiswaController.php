@@ -17,7 +17,7 @@ class KeuanganMahasiswaController extends Controller
         $request->validate([
             'ID_KEUANGAN_MHS' => 'required|unique:KEUANGAN_MAHASISWA,ID_KEUANGAN_MHS|max:20',
             'ID_KATEGORI'     => 'required|exists:KATEGORI_UKT,ID_KATEGORI',
-            'ID_MAHASISWA'    => 'required|max:20',
+            'ID_MAHASISWA'    => 'required|max:36',
             'SEMESTER'        => 'required|max:15',
             'BEASISWA'        => 'nullable|max:20',
             'STATUS_AKTIF'    => 'required|max:20',
