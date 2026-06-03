@@ -13,6 +13,7 @@ class KategoriUktController extends Controller
     public function store(Request $request)
     {
     $isArray = array_is_list($request->all());
+    dd($request->all());
 
     if ($isArray) {
         $inserted = [];
