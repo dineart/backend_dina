@@ -10,15 +10,18 @@ class KategoriUktController extends Controller
         return response()->json(['success' => true, 'data' => KategoriUkt::all()]);
     }
 
-    public function store(Request $request)
-    {
-    $isArray = array_is_list($request->all());
-    dd($request->all());
+public function store(Request $request)
+{
+    // Buang data tambahan dari middleware
+    $payload = $request->except('auth_user');
 
-    if ($isArray) {
+    // Cek apakah request berupa array data
+    if (array_is_list($payload)) {
+
         $inserted = [];
-        foreach ($request->all() as $item) {
-            // Validasi termasuk cek ID duplikat
+
+        foreach ($payload as $item) {
+
             validator($item, [
                 'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
                 'ID_PRODI'     => 'required|max:20',
@@ -35,23 +38,24 @@ class KategoriUktController extends Controller
             'message' => count($inserted) . ' data kategori UKT berhasil ditambahkan',
             'data'    => $inserted
         ], 201);
-
-    } else {
-        $request->validate([
-            'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
-            'ID_PRODI'     => 'required|max:20',
-            'JENJANG'      => 'required|max:20',
-            'GOLONGAN_UKT' => 'required|max:15',
-            'NOMINAL_UKT'  => 'required|numeric',
-        ]);
-
-        $data = KategoriUkt::create($request->all());
-        return response()->json([
-            'success' => true,
-            'message' => 'Kategori UKT berhasil ditambahkan',
-            'data'    => $data
-        ], 201);
     }
+
+    // Single insert
+    $request->validate([
+        'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
+        'ID_PRODI'     => 'required|max:20',
+        'JENJANG'      => 'required|max:20',
+        'GOLONGAN_UKT' => 'required|max:15',
+        'NOMINAL_UKT'  => 'required|numeric',
+    ]);
+
+    $data = KategoriUkt::create($payload);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Kategori UKT berhasil ditambahkan',
+        'data'    => $data
+    ], 201);
 }
 
     public function show($id)
