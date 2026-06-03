@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('keuangan_mahasiswa', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('KEUANGAN_MAHASISWA', function (Blueprint $table) {
+            $table->string('ID_KEUANGAN_MHS', 20)->primary();
+            $table->string('ID_KATEGORI', 20);
+            $table->string('ID_MAHASISWA', 36)->nullable(); // UUID dari kelompok 3
+            $table->string('SEMESTER', 15)->nullable();
+            $table->string('BEASISWA', 20)->nullable();
+            $table->string('STATUS_AKTIF', 20)->nullable();
+
+            $table->foreign('ID_KATEGORI')
+                  ->references('ID_KATEGORI')
+                  ->on('KATEGORI_UKT')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('keuangan_mahasiswa');
+        Schema::dropIfExists('KEUANGAN_MAHASISWA');
     }
 };
