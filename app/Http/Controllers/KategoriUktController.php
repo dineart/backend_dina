@@ -12,11 +12,12 @@ class KategoriUktController extends Controller
 
 public function store(Request $request)
 {
-    // Buang data tambahan dari middleware
-    $payload = $request->except('auth_user');
+    $payload = collect($request->all())
+        ->filter(fn($value, $key) => is_numeric($key))
+        ->values()
+        ->toArray();
 
-    // Cek apakah request berupa array data
-    if (array_is_list($payload)) {
+    if (!empty($payload)) {
 
         $inserted = [];
 
@@ -36,11 +37,11 @@ public function store(Request $request)
         return response()->json([
             'success' => true,
             'message' => count($inserted) . ' data kategori UKT berhasil ditambahkan',
-            'data'    => $inserted
+            'data' => $inserted
         ], 201);
     }
 
-    // Single insert
+    // Single data
     $request->validate([
         'ID_KATEGORI'  => 'required|unique:KATEGORI_UKT,ID_KATEGORI|max:20',
         'ID_PRODI'     => 'required|max:20',
@@ -49,12 +50,12 @@ public function store(Request $request)
         'NOMINAL_UKT'  => 'required|numeric',
     ]);
 
-    $data = KategoriUkt::create($payload);
+    $data = KategoriUkt::create($request->except('auth_user'));
 
     return response()->json([
         'success' => true,
         'message' => 'Kategori UKT berhasil ditambahkan',
-        'data'    => $data
+        'data' => $data
     ], 201);
 }
 
