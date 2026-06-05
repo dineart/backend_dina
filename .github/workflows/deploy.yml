@@ -21,7 +21,5 @@ jobs:
             git pull origin main
             
             docker compose -f docker-compose.prod.yml exec -T php composer install --no-interaction --prefer-dist --optimize-autoloader
-            
-            docker compose -f docker-compose.prod.yml exec -T php php artisan migrate --force
-            
+                        
             docker compose -f docker-compose.prod.yml exec -T php php artisan optimize:clear
