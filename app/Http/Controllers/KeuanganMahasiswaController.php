@@ -109,6 +109,8 @@ class KeuanganMahasiswaController extends Controller
 
     private function tentukanGolongan($penghasilan, $pekerjaan)
     {
+        $pekerjaan = strtolower(trim($pekerjaan));
+
         if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
             return [
                 'golongan' => 'Golongan 1',
