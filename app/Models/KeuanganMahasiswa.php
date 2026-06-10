@@ -1,12 +1,9 @@
 <?php
 namespace App\Models;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class KeuanganMahasiswa extends Model
 {
-    use HasUuids;
-
     protected $table = 'KEUANGAN_MAHASISWA';
     protected $primaryKey = 'ID_KEUANGAN_MHS';
     public $incrementing = false;
