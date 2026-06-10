@@ -136,6 +136,9 @@ class KeuanganMahasiswaController extends Controller
         }
 
         if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+
+            dd('Masuk bok penghasilan');
+
             if (
                 $pekerjaan == 'Ibu Rumah Tangga' ||
                 $pekerjaan == 'Tidak Bekerja'
