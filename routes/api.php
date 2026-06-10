@@ -12,4 +12,10 @@ Route::middleware(['jwt.auth'])->group(function () {
     
     // Endpoint untuk kelompok lain
     Route::get('status-aktif/{id_mahasiswa}', [KeuanganMahasiswaController::class, 'statusAktif']);
+
+    // Endpoint untuk pengujian golongan
+    Route::post(
+    '/keuangan-mahasiswa/test-golongan',
+    [KeuanganMahasiswaController::class, 'testGolongan']
+    );
 });
