@@ -73,6 +73,52 @@ class KeuanganMahasiswaController extends Controller
         return response()->json(['success' => true, 'message' => 'Data keuangan mahasiswa berhasil dihapus']);
     }
 
+    private function tentukanGolongan($penghasilan, $pekerjaan)
+    {
+        if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
+            return [
+                'golongan' => 'Golongan 1',
+                'beasiswa' => 'KIPK',
+            ];
+        }
+
+        if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
+            return [
+                'golongan' => 'Golongan 2',
+                'beasiswa' => null,
+            ];
+        }
+
+        if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+            if (
+                $pekerjaan == 'Ibu Rumah Tangga' ||
+                $pekerjaan == 'Tidak Bekerja'
+            ) {
+                return [
+                    'golongan' => 'Golongan 3',
+                    'beasiswa' => null,
+                ];
+            }
+
+            if ($pekerjaan == 'PNS') {
+                return [
+                    'golongan' => 'Golongan 5',
+                    'beasiswa' => null,
+                ];
+            }
+
+            return [
+                'golongan' => 'Golongan 4',
+                'beasiswa' => null,
+            ];
+        }
+
+        return [
+            'golongan' => 'Golongan 5',
+            'beasiswa' => null,
+        ];
+    }
+
     public function statusAktif($id_mahasiswa)
     {
         $data = KeuanganMahasiswa::with('kategoriUkt')
