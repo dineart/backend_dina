@@ -5,7 +5,7 @@ services:
     build:
       context: .                          
       dockerfile: docker/php/Dockerfile   
-    container_name: laravel_php_kelompok4
+    container_name: laravel_php_kelompok_4_4a
     restart: unless-stopped               
     working_dir: /var/www/html
 
@@ -14,7 +14,7 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/conf.d/99-custom.ini  
 
     networks:
-      - laravel_network_kelompok4
+      - laravel_network_kelompok_4_4a
 
     depends_on:
       - mysql
@@ -22,11 +22,10 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: laravel_nginx_kelompok4
+    container_name: laravel_nginx_kelompok_4_4a
     restart: unless-stopped
 
     ports:
-      - "8871:80"
       - "8873:443"
 
     volumes:
@@ -36,14 +35,14 @@ services:
       - ./data:/etc/letsencrypt
 
     networks:
-      - laravel_network_kelompok4
+      - laravel_network_kelompok_4_4a
 
     depends_on:
       - php
 
   certbot:
     image: certbot/certbot
-    container_name: laravel_certbot_kelompok4
+    container_name: laravel_certbot_kelompok_4_4a
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./data:/etc/letsencrypt
@@ -51,8 +50,11 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: laravel_mysql_kelompok4
+    container_name: laravel_mysql_kelompok_4_4a
     restart: unless-stopped
+
+    ports:
+      - "3306"
 
     environment:
       - MYSQL_DATABASE=${DB_DATABASE:-app}
@@ -60,16 +62,27 @@ services:
       - MYSQL_USER=${DB_USERNAME:-laravel}
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
 
-    ports:
-      - "33061:3306"
-
     volumes:
-      - ./database:/docker-entrypoint-initdb.d
-
+      - db_data_kelompok_4_4a:/var/lib/mysql
     networks:
-      - laravel_network_kelompok4
+      - laravel_network_kelompok_4_4a
 
     command: --default-authentication-plugin=caching_sha2_password
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: laravel_pma_kelompok_4_4a
+      ports:
+        - "8873"
+      environment:
+        PMA_HOST: mysql
+        PMA_PORT: 3306
+        UPLOAD_LIMIT: 64M
+        PMA_ABSOLUTE_URI: "https://api-keuangan-4a.akufarish.my.id:8873/phpmyadmin/"
+      depends_on:
+        - mysql
+      networks:
+        - laravel_network_kelompok_4_4a
 
   # redis:
   #   image: redis:7-alpine
@@ -88,11 +101,11 @@ services:
   #   command: redis-server --appendonly yes
 
 networks:
-  laravel_network_kelompok4:
+  laravel_network_kelompok_4_4a:
     driver: bridge
 
 volumes:
-  mysql_data:
+  db_data_kelompok_4_4a:
     driver: local
   # redis_data:
   #   driver: local
