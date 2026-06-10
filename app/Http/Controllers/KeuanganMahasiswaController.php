@@ -73,6 +73,40 @@ class KeuanganMahasiswaController extends Controller
         return response()->json(['success' => true, 'message' => 'Data keuangan mahasiswa berhasil dihapus']);
     }
 
+    public function testGolongan(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->tentukanGolongan($request->penghasilan, $request->pekerjaan)
+        ]);
+    }
+
+    public function statusAktif($id_mahasiswa)
+    {
+        $data = KeuanganMahasiswa::with('kategoriUkt')
+                ->where('ID_MAHASISWA', $id_mahasiswa)
+                ->first();
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data mahasiswa tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'ID_MAHASISWA' => $data->ID_MAHASISWA,
+                'STATUS_AKTIF' => $data->STATUS_AKTIF,
+                'SEMESTER'     => $data->SEMESTER,
+                'BEASISWA'     => $data->BEASISWA,
+                'KATEGORI_UKT' => $data->kategoriUkt->GOLONGAN_UKT ?? null,
+                'NOMINAL_UKT'  => $data->kategoriUkt->NOMINAL_UKT ?? null,
+            ]
+        ]);
+    }
+
     private function tentukanGolongan($penghasilan, $pekerjaan)
     {
         if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
@@ -119,29 +153,4 @@ class KeuanganMahasiswaController extends Controller
         ];
     }
 
-    public function statusAktif($id_mahasiswa)
-    {
-        $data = KeuanganMahasiswa::with('kategoriUkt')
-                ->where('ID_MAHASISWA', $id_mahasiswa)
-                ->first();
-
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data mahasiswa tidak ditemukan'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data'    => [
-                'ID_MAHASISWA' => $data->ID_MAHASISWA,
-                'STATUS_AKTIF' => $data->STATUS_AKTIF,
-                'SEMESTER'     => $data->SEMESTER,
-                'BEASISWA'     => $data->BEASISWA,
-                'KATEGORI_UKT' => $data->kategoriUkt->GOLONGAN_UKT ?? null,
-                'NOMINAL_UKT'  => $data->kategoriUkt->NOMINAL_UKT ?? null,
-            ]
-        ]);
-    }
 }
