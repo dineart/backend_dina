@@ -75,6 +75,10 @@ class KeuanganMahasiswaController extends Controller
 
     public function testGolongan(Request $request)
     {
+        dd($request->all());
+
+        $hasil = $this->tentukanGolongan($request->penghasilan, $request->pekerjaan);
+
         return response()->json([
             'success' => true,
             'data' => $this->tentukanGolongan($request->penghasilan, $request->pekerjaan)
@@ -109,6 +113,11 @@ class KeuanganMahasiswaController extends Controller
 
     private function tentukanGolongan($penghasilan, $pekerjaan)
     {
+        dd([
+            'penghasilan' => $penghasilan,
+            'pekerjaan' => $pekerjaan
+        ]);
+
         $pekerjaan = strtolower(trim($pekerjaan));
 
         if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
