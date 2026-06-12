@@ -112,30 +112,28 @@ class KeuanganMahasiswaController extends Controller
         ]);
     }
 
-   private function tentukanGolongan($penghasilan, $pekerjaan)
+    private function tentukanGolongan($penghasilan, $pekerjaan)
     {
-    $pekerjaan = strtolower(trim($pekerjaan));
+    \Log::info('DEBUG UKT', [
+        'penghasilan' => $penghasilan,
+        'pekerjaan_awal' => $pekerjaan
+    ]);
 
-    if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
-        return [
-            'golongan' => 'Golongan 1',
-            'beasiswa' => 'KIPK',
-        ];
-    }
+    $pekerjaan = strtolower(trim((string)$pekerjaan));
 
-    if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
-        return [
-            'golongan' => 'Golongan 2',
-            'beasiswa' => null,
-        ];
-    }
+    \Log::info('DEBUG UKT SETELAH LOWERCASE', [
+        'pekerjaan' => $pekerjaan
+    ]);
 
     if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+
+        \Log::info('MASUK BLOK 2-5 JUTA');
 
         if (
             $pekerjaan == 'ibu rumah tangga' ||
             $pekerjaan == 'tidak bekerja'
         ) {
+            \Log::info('GOLONGAN 3');
             return [
                 'golongan' => 'Golongan 3',
                 'beasiswa' => null,
@@ -143,12 +141,14 @@ class KeuanganMahasiswaController extends Controller
         }
 
         if ($pekerjaan == 'pns') {
+            \Log::info('GOLONGAN 5');
             return [
                 'golongan' => 'Golongan 5',
                 'beasiswa' => null,
             ];
         }
 
+        \Log::info('GOLONGAN 4');
         return [
             'golongan' => 'Golongan 4',
             'beasiswa' => null,
