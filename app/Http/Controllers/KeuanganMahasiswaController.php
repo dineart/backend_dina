@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KeuanganMahasiswa;
+use App\Models\KategoriUkt;
 use Illuminate\Http\Request;
 
 class KeuanganMahasiswaController extends Controller
@@ -85,6 +86,60 @@ class KeuanganMahasiswaController extends Controller
             'data' => $hasil
         ]);
     }
+
+    public function generateDummy()
+    {
+        $mahasiswa = [];
+
+        $no = 1;
+
+        foreach ($mahasiswa as $mhs) {
+
+            $hasil = $this->tentukanGolongan(
+                $mhs['penghasilan'],
+                $mhs['pekerjaan']
+            );
+
+            $kategori = KategoriUkt::where(
+                'ID_PRODI',
+                $mhs['prodi_id']
+            )
+            ->where(
+                'GOLONGAN_UKT',
+                $hasil['golongan']
+            )
+            ->first();
+
+            if (!$kategori) {
+                continue;
+            }
+
+            $cek = KeuanganMahasiswa::where(
+                'ID_MAHASISWA',
+                $mhs['id_mahasiswa']
+            )->first();
+
+            if ($cek) {
+                continue;
+            }
+
+            KeuanganMahasiswa::create([
+                'ID_KEUANGAN_MHS' => 'KM' . str_pad($no, 3, '0', STR_PAD_LEFT),
+                'ID_MAHASISWA' => $mhs['id_mahasiswa'],
+                'ID_KATEGORI' => $kategori->ID_KATEGORI,
+                'SEMESTER' => 1,
+                'BEASISWA' => $hasil['beasiswa'],
+                'STATUS_AKTIF' => 'Aktif'
+            ]);
+
+            $no++;
+        }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Data dummy berhasil dibuat'
+    ]);
+}
 
     public function statusAktif($id_mahasiswa)
     {
