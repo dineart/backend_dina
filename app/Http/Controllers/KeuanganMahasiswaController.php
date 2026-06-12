@@ -114,6 +114,7 @@ class KeuanganMahasiswaController extends Controller
 
     private function tentukanGolongan($penghasilan, $pekerjaan)
     {
+        $penghasilan = trim((string)$penghasilan);
         $pekerjaan = strtolower(trim((string)$pekerjaan));
 
         // Golongan 1 + KIPK
@@ -125,7 +126,7 @@ class KeuanganMahasiswaController extends Controller
         }
 
         // Golongan 2
-        if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
+        if ($penghasilan == '500.000 - 2.000.000') {
             return [
                 'golongan' => 'Golongan 2',
                 'beasiswa' => null,
@@ -133,18 +134,20 @@ class KeuanganMahasiswaController extends Controller
         }
 
         // Golongan 3,4,5
-        if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+        if ($penghasilan == '2.000.000 - 5.000.000') {
 
+            // IRT / Tidak Bekerja
             if (
                 $pekerjaan == 'ibu rumah tangga' ||
                 $pekerjaan == 'tidak bekerja'
-            ) { 
+            ) {
                 return [
                     'golongan' => 'Golongan 3',
                     'beasiswa' => null,
                 ];
             }
 
+            // PNS
             if ($pekerjaan == 'pns') {
                 return [
                     'golongan' => 'Golongan 5',
@@ -152,13 +155,22 @@ class KeuanganMahasiswaController extends Controller
                 ];
             }
 
+            // Bekerja, Wiraswasta, dll
             return [
                 'golongan' => 'Golongan 4',
                 'beasiswa' => null,
             ];
         }
 
-        // > 5 juta
+        // Diatas 5 juta
+        if ($penghasilan == 'Diatas 5.000.000') {
+            return [
+                'golongan' => 'Golongan 5',
+                'beasiswa' => null,
+            ];
+        }
+
+        // Fallback
         return [
             'golongan' => 'Golongan 5',
             'beasiswa' => null,
