@@ -75,14 +75,14 @@ class KeuanganMahasiswaController extends Controller
 
     public function testGolongan(Request $request)
     {
-        dd($request->all());
-
-        $hasil = $this->tentukanGolongan($request->penghasilan, $request->pekerjaan);
+        $hasil = $this->tentukanGolongan(
+            $request->penghasilan,
+            $request->pekerjaan
+        );
 
         return response()->json([
-            'test' => 'DINA',
             'success' => true,
-            'data' => $this->tentukanGolongan($request->penghasilan, $request->pekerjaan)
+            'data' => $hasil
         ]);
     }
 
