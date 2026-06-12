@@ -18,4 +18,7 @@ Route::middleware(['jwt.auth'])->group(function () {
     '/keuangan-mahasiswa/test-golongan',
     [KeuanganMahasiswaController::class, 'testGolongan']
     );
+
+    // Endpoint untuk generate data dummy
+    Route::post('/generate-dummy', [KeuanganMahasiswaController::class, 'generateDummy']);
 });
