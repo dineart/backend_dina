@@ -112,60 +112,53 @@ class KeuanganMahasiswaController extends Controller
         ]);
     }
 
-    private function tentukanGolongan($penghasilan, $pekerjaan)
+   private function tentukanGolongan($penghasilan, $pekerjaan)
     {
-        dd([
-            'penghasilan' => $penghasilan,
-            'pekerjaan' => $pekerjaan
-        ]);
+    $pekerjaan = strtolower(trim($pekerjaan));
 
-        $pekerjaan = strtolower(trim($pekerjaan));
+    if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
+        return [
+            'golongan' => 'Golongan 1',
+            'beasiswa' => 'KIPK',
+        ];
+    }
 
-        if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
+    if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
+        return [
+            'golongan' => 'Golongan 2',
+            'beasiswa' => null,
+        ];
+    }
+
+    if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+
+        if (
+            $pekerjaan == 'ibu rumah tangga' ||
+            $pekerjaan == 'tidak bekerja'
+        ) {
             return [
-                'golongan' => 'Golongan 1',
-                'beasiswa' => 'KIPK',
-            ];
-        }
-
-        if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
-            return [
-                'golongan' => 'Golongan 2',
+                'golongan' => 'Golongan 3',
                 'beasiswa' => null,
             ];
         }
 
-        if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
-
-            dd('Masuk bok penghasilan');
-
-            if (
-                $pekerjaan == 'Ibu Rumah Tangga' ||
-                $pekerjaan == 'Tidak Bekerja'
-            ) {
-                return [
-                    'golongan' => 'Golongan 3',
-                    'beasiswa' => null,
-                ];
-            }
-
-            if ($pekerjaan == 'PNS') {
-                return [
-                    'golongan' => 'Golongan 5',
-                    'beasiswa' => null,
-                ];
-            }
-
+        if ($pekerjaan == 'pns') {
             return [
-                'golongan' => 'Golongan 4',
+                'golongan' => 'Golongan 5',
                 'beasiswa' => null,
             ];
         }
 
         return [
-            'golongan' => 'Golongan 5',
+            'golongan' => 'Golongan 4',
             'beasiswa' => null,
         ];
     }
+
+    return [
+        'golongan' => 'Golongan 5',
+        'beasiswa' => null,
+    ];
+}
 
 }
