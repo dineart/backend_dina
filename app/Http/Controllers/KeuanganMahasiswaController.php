@@ -114,51 +114,55 @@ class KeuanganMahasiswaController extends Controller
 
     private function tentukanGolongan($penghasilan, $pekerjaan)
     {
-    \Log::info('DEBUG UKT', [
-        'penghasilan' => $penghasilan,
-        'pekerjaan_awal' => $pekerjaan
-    ]);
+        $pekerjaan = strtolower(trim((string)$pekerjaan));
 
-    $pekerjaan = strtolower(trim((string)$pekerjaan));
-
-    \Log::info('DEBUG UKT SETELAH LOWERCASE', [
-        'pekerjaan' => $pekerjaan
-    ]);
-
-    if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
-
-        \Log::info('MASUK BLOK 2-5 JUTA');
-
-        if (
-            $pekerjaan == 'ibu rumah tangga' ||
-            $pekerjaan == 'tidak bekerja'
-        ) {
-            \Log::info('GOLONGAN 3');
+        // Golongan 1 + KIPK
+        if ($penghasilan == 'Kurang dari/Sama dengan 500.000') {
             return [
-                'golongan' => 'Golongan 3',
+                'golongan' => 'Golongan 1',
+                'beasiswa' => 'KIPK',
+            ];
+        }
+
+        // Golongan 2
+        if ($penghasilan == 'Lebih dari 500.000 - 2.000.000') {
+            return [
+                'golongan' => 'Golongan 2',
                 'beasiswa' => null,
             ];
         }
 
-        if ($pekerjaan == 'pns') {
-            \Log::info('GOLONGAN 5');
+        // Golongan 3,4,5
+        if ($penghasilan == 'Lebih dari 2.000.000 - 5.000.000') {
+
+            if (
+                $pekerjaan == 'ibu rumah tangga' ||
+                $pekerjaan == 'tidak bekerja'
+            ) { 
+                return [
+                    'golongan' => 'Golongan 3',
+                    'beasiswa' => null,
+                ];
+            }
+
+            if ($pekerjaan == 'pns') {
+                return [
+                    'golongan' => 'Golongan 5',
+                    'beasiswa' => null,
+                ];
+            }
+
             return [
-                'golongan' => 'Golongan 5',
+                'golongan' => 'Golongan 4',
                 'beasiswa' => null,
             ];
         }
 
-        \Log::info('GOLONGAN 4');
+        // > 5 juta
         return [
-            'golongan' => 'Golongan 4',
+            'golongan' => 'Golongan 5',
             'beasiswa' => null,
         ];
     }
-
-    return [
-        'golongan' => 'Golongan 5',
-        'beasiswa' => null,
-    ];
-}
 
 }
