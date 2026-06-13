@@ -24,4 +24,10 @@ Route::middleware(['jwt.auth'])->group(function () {
         'keuangan-mahasiswa/generate-dummy',
         [KeuanganMahasiswaController::class, 'generateDummy']
     );
+
+    // Endpoint untuk generate tagihan otomatis
+    Route::post(
+        'tagihan/generate',
+        [TagihanController::class, 'generateTagihan']
+    );
 });
