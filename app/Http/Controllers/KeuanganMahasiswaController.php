@@ -61,7 +61,7 @@ class KeuanganMahasiswaController extends Controller
             ];
         }
 
-        return response()->json(['success' => true, 'data' => $data]);
+        return response()->json(['success' => true, 'data' => $hasil]);
     }
 
     public function store(Request $request)
