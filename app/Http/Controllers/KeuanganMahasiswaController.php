@@ -20,7 +20,8 @@ class KeuanganMahasiswaController extends Controller
         if (!$response->successful()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil data mahasiswa',
+                'status' => $response->status(),
+                'body' => $response->body()
             ], 500);
         }
 
