@@ -100,4 +100,67 @@ class TagihanController extends Controller
         $data->delete();
         return response()->json(['success' => true, 'message' => 'Tagihan berhasil dihapus']);
     }
+
+    public function generateTagihan()
+    {
+        $dataKeuangan = KeuanganMahasiswa::with('kategoriUkt')->get();
+
+        $inserted = 0;
+        $skip = 0;
+
+        $no = Tagihan::count() + 1;
+
+        foreach ($dataKeuangan as $km) {
+
+            $cek = Tagihan::where(
+                'ID_KEUANGAN_MHS',
+                $km->ID_KEUANGAN_MHS
+            )->first();
+
+            if ($cek) {
+                $skip++;
+                continue;
+            }
+        
+
+            Tagihan::create([
+                'ID_TAGIHAN'      => 'TG' . str_pad($no, 3, '0', STR_PAD_LEFT),
+                'ID_KEUANGAN_MHS' => $km->ID_KEUANGAN_MHS,
+
+                'NO_INVOICE'      => 'INV' . str_pad($no, 5, '0', STR_PAD_LEFT),
+
+                'NAMA_TAGIHAN'    => 'UKT Semester 1',
+
+                'NOMOR_CICILAN'   => 1,
+                'TOTAL_CICILAN'   => 1,
+
+                'NOMINAL_CICILAN' => $km->kategoriUkt->NOMINAL_UKT,
+
+                'POTONGAN'        => 0,
+
+                'TOTAL_TAGIHAN'   => $km->kategoriUkt->NOMINAL_UKT,
+
+                'TGL_TAGIHAN'     => now()->toDateString(),
+
+                'TGL_JATUH_TEMPO' => now()
+                                        ->addDays(30)
+                                        ->toDateString(),
+
+                'STATUS_BAYAR'    => 'Belum Bayar',
+
+                'TGL_BAYAR'       => null,
+            ]);
+
+            $inserted++;
+            $no++;
+        }
+
+    return response()->json([
+        'success' => true,
+        'inserted' => $inserted,
+        'skip'  => $skip,
+    ]);
+        
+    }
+
 }
