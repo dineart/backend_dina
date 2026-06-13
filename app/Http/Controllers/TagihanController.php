@@ -28,7 +28,7 @@ class TagihanController extends Controller
             'TGL_JATUH_TEMPO' => 'nullable|date',
             'TGL_TAGIHAN'     => 'nullable|date',
             'STATUS_BAYAR'    => 'required|max:20',
-            'TGL_TRANSAKSI'   => 'nullable|date',
+            'TGL_BAYAR'   => 'nullable|date',
         ]);
 
         // Hitung potongan beasiswa otomatis
@@ -82,7 +82,7 @@ class TagihanController extends Controller
             'TGL_JATUH_TEMPO' => 'sometimes|date',
             'TGL_TAGIHAN'     => 'sometimes|date',
             'STATUS_BAYAR'    => 'sometimes|max:20',
-            'TGL_TRANSAKSI'   => 'sometimes|date',
+            'TGL_BAYAR'   => 'sometimes|date',
         ]);
 
         $data->update($request->all());
