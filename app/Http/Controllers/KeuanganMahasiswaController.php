@@ -129,7 +129,7 @@ class KeuanganMahasiswaController extends Controller
                 'ID_KATEGORI' => $kategori->ID_KATEGORI,
                 'SEMESTER' => 1,
                 'BEASISWA' => $hasil['beasiswa'],
-                'STATUS_AKTIF' => 'Aktif'
+                'STATUS_AKTIF' => 'Tidak Aktif',
             ]);
 
             $no++;
