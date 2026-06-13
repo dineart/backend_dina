@@ -88,50 +88,49 @@ class KeuanganMahasiswaController extends Controller
         ]);
     }
 
-    public function generateDummy()
+    public function generateDummy(Request $request)
     {
-        //baca dari file JSON lokal
-        $mahasiswa = json_decode(
-            file_get_contents(storage_path('app/mahaasiswa.json')),
-            true
-        );
+        //Ambil token dari request ke API mahasiswa
+        $token = $request->bearerToken();
+
+        //Kirim token ke API mahasiswa
+        $response = Http::withToken($token)
+            ->acceptJson()
+            ->get('https://api-mahasiswa-4a.akuarish.my.id:8874/api/mahasiswa');
+        
+        $mahasiswa = $response->json();
 
         //Kalau response punya key 'data'
         if (isset($mahasiswa['data'])) {
             $mahasiswa = $mahasiswa['data'];
         }
 
-        $no = 1;
+        $no = KeuanganMahasiswa::count() + 1;
 
         foreach ($mahasiswa as $mhs) {
+            $penghasilan = null;
+            $pekerjaan = null;
 
-            $hasil = $this->tentukanGolongan(
-                $mhs['orang_tua_wali']['penghasilan'],
-                $mhs['orang_tua_wali']['pekerjaan']
-            );
-
-            $kategori = KategoriUkt::where(
-                'ID_PRODI',
-                $mhs['prodi_id']
-            )
-            ->where(
-                'GOLONGAN_UKT',
-                $hasil['golongan']
-            )
-            ->first();
-
-            if (!$kategori) {
-                continue;
+            if(!empty($mhs['orang_tua_wali'])) {
+                foreach ($mhs['orang_tua_wali'] as $ortu) {
+                    if ($ortu['jenis_peran'] == 'ayah' || $ortu['jenis_peran'] == 'ibu') {
+                        $penghasilan = $ortu['penghasilan'];
+                        $pekerjaan = $ortu['pekerjaan'];
+                        break;
+                    }
+                }
             }
 
-            $cek = KeuanganMahasiswa::where(
-                'ID_MAHASISWA',
-                $mhs['id_mahasiswa']
-            )->first();
+            $hasil = $this->tentukanGolongan($penghasilan, $pekerjaan);
 
-            if ($cek) {
-                continue;
-            }
+            $kategori = KategoriUkt::where('ID_PRODI', $mhs['id_prodi'])
+                        ->where('GOLONGAN_UKT', $hasil['golongan'])
+                        ->first();
+
+            if (!$kategori) continue;
+
+            $cek = KeuanganMahasiswa::where('ID_MAHASISWA', $mhs['id_mahasiswa'])->first();
+            if ($cek) continue;
 
             KeuanganMahasiswa::create([
                 'ID_KEUANGAN_MHS' => 'KM' . str_pad($no, 3, '0', STR_PAD_LEFT),
