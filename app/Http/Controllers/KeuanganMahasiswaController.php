@@ -90,14 +90,16 @@ class KeuanganMahasiswaController extends Controller
 
     public function generateDummy()
     {
-        $response = Http::acceptJson()->get(
-            'https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa'
+        //baca dari file JSON lokal
+        $mahasiswa = json_decode(
+            file_get_contents(storage_path('app/mahaasiswa.json')),
+            true
         );
 
-        return response()->json([
-            'status' => $response->status(),
-            'body' => $response->body(),
-        ]);
+        //Kalau response punya key 'data'
+        if (isset($mahasiswa['data'])) {
+            $mahasiswa = $mahasiswa['data'];
+        }
 
         $no = 1;
 
