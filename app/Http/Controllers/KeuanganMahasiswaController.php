@@ -9,9 +9,58 @@ use Illuminate\Support\Facedes\Https;
 
 class KeuanganMahasiswaController extends Controller
 {
-    public function index()
-    {
-        $data = KeuanganMahasiswa::with('kategoriUkt')->get();
+    public function index(Request $request)
+    {   
+        $token = $request->bearerToken();
+
+        $response = Http::withToken($token)
+            ->acceptJson()
+            ->get('https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa');
+        
+        if (!$response->successful()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data mahasiswa',
+            ], 500);
+        }
+
+        $mahasiswaApi = $response->json();
+
+        if (isset($mahasiswaApi['data'])) {
+            $mahasiswaApi = $mahasiswaApi['data'];
+        }
+
+        dd($mahasiswaApi[0]);
+
+        $dataKeuangan = KeuanganMahasiswa::with('kategoriUkt')->get();
+
+        $hasil = [];
+
+        foreach ($dataKeuangan as $keuangan) {
+
+            $mhs = collect($mahasiswaApi)->firstWhere(
+                'id_mahasiswa',
+                $keuangan->ID_MAHASISWA
+            );
+
+            $hasil[] = [
+                'id_mahasiswa' => $keuangan->ID_MAHASISWA,
+                'nim' => $mhs['nim'] ?? null,
+                'nama' => $mhs['nama_mahasiswa'] ?? null,
+                'prodi_id' => $mhs['prodi_id'] ?? null,
+
+                'golongan-ukt' =>
+                    $keuangan->kategoriUkt->GOLONGAN_UKT ?? null,
+                
+                'nominal-ukt' =>
+                    $keuangan->kategoriUkt->NOMINAL_UKT ?? null,
+                
+                'semester' => $keuangan->SEMESTER,
+                'beasiswa' => $keuangan->BEASISWA,
+                'status_aktif' => $keuangan->STATUS_AKTIF,
+            ];
+        }
+
         return response()->json(['success' => true, 'data' => $data]);
     }
 
