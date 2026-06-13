@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\KeuanganMahasiswa;
 use App\Models\KategoriUkt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class KeuanganMahasiswaController extends Controller
 {
@@ -89,15 +90,19 @@ class KeuanganMahasiswaController extends Controller
 
     public function generateDummy()
     {
-        $mahasiswa = [];
+        $response = Http::acceptJson()->get(
+            'https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa'
+        );
+
+        $mahasiswa = $response->json('data');
 
         $no = 1;
 
         foreach ($mahasiswa as $mhs) {
 
             $hasil = $this->tentukanGolongan(
-                $mhs['penghasilan'],
-                $mhs['pekerjaan']
+                $mhs['orang_tua_wali']['penghasilan'],
+                $mhs['orang_tua_wali']['pekerjaan']
             );
 
             $kategori = KategoriUkt::where(
