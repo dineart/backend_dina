@@ -97,12 +97,10 @@ class KeuanganMahasiswaController extends Controller
         $mahasiswa = $response->json('data');
 
         //Debug sementara
-        return response()->json([
-            'success' => true,
-            'total_mahasiswa' => count($mahasiswa),
-            'sample' => $mahasiswa[0]
-        ]);
-
+        return response()->json(
+            $response->json()
+        );
+        
         $no = 1;
 
         foreach ($mahasiswa as $mhs) {
