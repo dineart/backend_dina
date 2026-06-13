@@ -24,6 +24,4 @@ Route::middleware(['jwt.auth'])->group(function () {
         'keuangan-mahasiswa/generate-dummy',
         [KeuanganMahasiswaController::class, 'generateDummy']
     );
-
-    Route::apiResource('keuangan-mahasiswa', KeuanganMahasiswaController::class);
 });
