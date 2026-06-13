@@ -153,10 +153,7 @@ class KeuanganMahasiswaController extends Controller
                 dd($mhs);
             }
 
-            $idProdi =
-                $mhs['id_prodi']
-                ?? $mhs['ID_PRODI']
-                ?? null;
+            $idProdi = $mhs['prodi_id'] ?? null;
 
             if (!$idProdi) {
                 $skipProdi++;
