@@ -94,13 +94,8 @@ class KeuanganMahasiswaController extends Controller
             'https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa'
         );
 
-        $mahasiswa = $response->json('data');
+        dd($response->body());
 
-        //Debug sementara
-        return response()->json(
-            $response->json()
-        );
-        
         $no = 1;
 
         foreach ($mahasiswa as $mhs) {
