@@ -123,7 +123,11 @@ class KeuanganMahasiswaController extends Controller
 
             $hasil = $this->tentukanGolongan($penghasilan, $pekerjaan);
 
-            $kategori = KategoriUkt::where('ID_PRODI', $mhs['id_prodi'])
+            // Cek apakah id_prodi ada
+            $idProdi = $mhs['id_prodi'] ?? $mhs['ID_PRODI'] ?? null;
+            if (empty($idProdi)) continue;
+
+            $kategori = KategoriUkt::where('ID_PRODI', $idProdi)
                         ->where('GOLONGAN_UKT', $hasil['golongan'])
                         ->first();
 
