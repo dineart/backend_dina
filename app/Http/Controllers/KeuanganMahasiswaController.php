@@ -148,6 +148,10 @@ class KeuanganMahasiswaController extends Controller
                 $penghasilan,
                 $pekerjaan
             );
+            
+            foreach ($mahasiswa as $mhs) {
+                dd($mhs);
+            }
 
             $idProdi =
                 $mhs['id_prodi']
