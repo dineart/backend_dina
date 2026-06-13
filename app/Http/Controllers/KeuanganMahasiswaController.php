@@ -90,51 +90,93 @@ class KeuanganMahasiswaController extends Controller
 
     public function generateDummy(Request $request)
     {
-        //Ambil token dari request ke API mahasiswa
         $token = $request->bearerToken();
 
-        //Kirim token ke API mahasiswa
         $response = Http::withToken($token)
             ->acceptJson()
             ->get('https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa');
-        
+
+        if (!$response->successful()) {
+            return response()->json([
+                'success' => false,
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+        }
+
         $mahasiswa = $response->json();
 
-        //Kalau response punya key 'data'
         if (isset($mahasiswa['data'])) {
             $mahasiswa = $mahasiswa['data'];
         }
 
+        if (!is_array($mahasiswa)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Format data mahasiswa tidak valid',
+                'data' => $mahasiswa
+            ]);
+        }
+
+        $inserted = 0;
+        $skipKategori = 0;
+        $skipProdi = 0;
+        $skipDuplikat = 0;
+
         $no = KeuanganMahasiswa::count() + 1;
 
         foreach ($mahasiswa as $mhs) {
+
             $penghasilan = null;
             $pekerjaan = null;
 
-            if(!empty($mhs['orang_tua_wali'])) {
+            if (!empty($mhs['orang_tua_wali'])) {
                 foreach ($mhs['orang_tua_wali'] as $ortu) {
-                    if ($ortu['jenis_peran'] == 'ayah' || $ortu['jenis_peran'] == 'ibu') {
-                        $penghasilan = $ortu['penghasilan'];
-                        $pekerjaan = $ortu['pekerjaan'];
+
+                    if (
+                        strtolower($ortu['jenis_peran']) == 'ayah' ||
+                        strtolower($ortu['jenis_peran']) == 'ibu'
+                    ) {
+                        $penghasilan = $ortu['penghasilan'] ?? null;
+                        $pekerjaan = $ortu['pekerjaan'] ?? null;
                         break;
                     }
                 }
             }
 
-            $hasil = $this->tentukanGolongan($penghasilan, $pekerjaan);
+            $hasil = $this->tentukanGolongan(
+                $penghasilan,
+                $pekerjaan
+            );
 
-            // Cek apakah id_prodi ada
-            $idProdi = $mhs['id_prodi'] ?? $mhs['ID_PRODI'] ?? null;
-            if (empty($idProdi)) continue;
+            $idProdi =
+                $mhs['id_prodi']
+                ?? $mhs['ID_PRODI']
+                ?? null;
+
+            if (!$idProdi) {
+                $skipProdi++;
+                continue;
+            }
 
             $kategori = KategoriUkt::where('ID_PRODI', $idProdi)
-                        ->where('GOLONGAN_UKT', $hasil['golongan'])
-                        ->first();
+                ->where('GOLONGAN_UKT', $hasil['golongan'])
+                ->first();
 
-            if (!$kategori) continue;
+            if (!$kategori) {
+                $skipKategori++;
+                continue;
+            }
 
-            $cek = KeuanganMahasiswa::where('ID_MAHASISWA', $mhs['id_mahasiswa'])->first();
-            if ($cek) continue;
+            $cek = KeuanganMahasiswa::where(
+                'ID_MAHASISWA',
+                $mhs['id_mahasiswa']
+            )->first();
+
+            if ($cek) {
+                $skipDuplikat++;
+                continue;
+            }
 
             KeuanganMahasiswa::create([
                 'ID_KEUANGAN_MHS' => 'KM' . str_pad($no, 3, '0', STR_PAD_LEFT),
@@ -145,14 +187,19 @@ class KeuanganMahasiswaController extends Controller
                 'STATUS_AKTIF' => 'Tidak Aktif',
             ]);
 
+            $inserted++;
             $no++;
         }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Data dummy berhasil dibuat'
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'total_mahasiswa' => count($mahasiswa),
+            'inserted' => $inserted,
+            'skip_prodi' => $skipProdi,
+            'skip_kategori' => $skipKategori,
+            'skip_duplikat' => $skipDuplikat
+        ]);
+    }
 
     public function statusAktif($id_mahasiswa)
     {
