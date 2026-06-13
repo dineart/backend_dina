@@ -23,7 +23,7 @@ class Tagihan extends Model
         'TGL_JATUH_TEMPO',
         'TGL_TAGIHAN',
         'STATUS_BAYAR',
-        'TGL_TRANSAKSI',
+        'TGL_BAYAR',
     ];
 
     public function keuanganMahasiswa()
