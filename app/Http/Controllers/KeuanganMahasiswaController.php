@@ -94,21 +94,10 @@ class KeuanganMahasiswaController extends Controller
             'https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa'
         );
 
-        if (!$response->successful()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengambil data mahasiswa dari API'
-            ], 500);
-        }
-
-        $mahasiswa = $response->json();
-
-        if (!is_array($mahasiswa)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data mahasiswa tidak valid'
-            ], 500);
-        }
+        return response()->json([
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
 
         $no = 1;
 
