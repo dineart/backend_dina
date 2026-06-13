@@ -5,6 +5,7 @@ use App\Models\KeuanganMahasiswa;
 use App\Models\KategoriUkt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facedes\Https;
 
 class KeuanganMahasiswaController extends Controller
 {
@@ -148,7 +149,7 @@ class KeuanganMahasiswaController extends Controller
                 $penghasilan,
                 $pekerjaan
             );
-            
+
             $idProdi = $mhs['prodi_id'] ?? null;
 
             if (!$idProdi) {
