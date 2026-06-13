@@ -96,7 +96,7 @@ class KeuanganMahasiswaController extends Controller
         //Kirim token ke API mahasiswa
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get('https://api-mahasiswa-4a.akuarish.my.id:8874/api/mahasiswa');
+            ->get('https://api-mahasiswa-4a.akufarish.my.id:8874/api/mahasiswa');
         
         $mahasiswa = $response->json();
 
