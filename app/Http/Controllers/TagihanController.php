@@ -145,6 +145,20 @@ class TagihanController extends Controller
                 continue;
             }
         
+            $potongan = 0;
+            $totalTagihan = $km->kategoriUkt->NOMINAL_UKT;
+            $statusBayar = 'Belum Bayar';
+
+            if ($km->BEASISWA = 'KIPK') {
+
+                $potongan = $km->kategoriUkt->NOMINAL_UKT;
+                $totalTagihan = 0;
+                $statusBayar = 'LUNAS';
+
+                $km->update([
+                    'STATUS_AKTIF' => 'AKTIF'
+                ]);
+            }
 
             Tagihan::create([
                 'ID_TAGIHAN'      => 'TG' . str_pad($no, 3, '0', STR_PAD_LEFT),
@@ -159,9 +173,9 @@ class TagihanController extends Controller
 
                 'NOMINAL_CICILAN' => $km->kategoriUkt->NOMINAL_UKT,
 
-                'POTONGAN'        => 0,
+                'POTONGAN'        => $potongan,
 
-                'TOTAL_TAGIHAN'   => $km->kategoriUkt->NOMINAL_UKT,
+                'TOTAL_TAGIHAN'   => $totalTagihan,
 
                 'TGL_TAGIHAN'     => now()->toDateString(),
 
@@ -169,7 +183,7 @@ class TagihanController extends Controller
                                         ->addDays(30)
                                         ->toDateString(),
 
-                'STATUS_BAYAR'    => 'Belum Bayar',
+                'STATUS_BAYAR'    => $statusBayar,
 
                 'TGL_BAYAR'       => null,
             ]);
