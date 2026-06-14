@@ -85,15 +85,9 @@ class TagihanController extends Controller
             'TGL_BAYAR'   => 'sometimes|date',
         ]);
 
-        dd($request->all());
         $data->update($request->all());
 
         $data->refresh();
-
-        dd([
-            'status_bayar' => $data->STATUS_BAYAR,
-            'id_keuangan_mhs' => $data->ID_KEUANGAN_MHS
-        ]);
 
         $keuangan = KeuanganMahasiswa::find(
             $data->ID_KEUANGAN_MHS
