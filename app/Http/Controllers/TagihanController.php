@@ -87,6 +87,13 @@ class TagihanController extends Controller
 
         $data->update($request->all());
 
+        $data->refresh();
+
+        dd([
+            'status_bayar' => $data->STATUS_BAYAR,
+            'id_keuangan_mhs' => $data->ID_KEUANGAN_MHS
+        ]);
+
         $keuangan = KeuanganMahasiswa::find(
             $data->ID_KEUANGAN_MHS
         );
