@@ -154,7 +154,7 @@ class TagihanController extends Controller
 
                 $potongan = $km->kategoriUkt->NOMINAL_UKT;
                 $totalTagihan = 0;
-                $nominalCicilan = 0;
+                $nominalCicilan = $km->kategoriUkt->NOMINAL_UKT;
                 $statusBayar = 'LUNAS';
 
                 $km->update([
