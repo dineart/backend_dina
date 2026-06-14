@@ -94,17 +94,12 @@ class TagihanController extends Controller
             $data->ID_KEUANGAN_MHS
         )->first();
 
-        dd([
-            'tagihan' => $data->STATUS_BAYAR,
-            'id_keuangan' => $data->ID_KEUANGAN_MHS,
-            'keuangan' => $keuangan 
-        ]);
 
         if ($keuangan) {
 
             if (
-                $data->STATUS_BAYAR == 'LUNAS' ||
-                $data->STATUS_BAYAR == 'CICILAN'
+                strtoupper($data->STATUS_BAYAR) == 'LUNAS' ||
+                strtoupper($data->STATUS_BAYAR) == 'CICILAN'
             ) {
                 $keuangan->update([
                     'STATUS_AKTIF' => 'AKTIF'
