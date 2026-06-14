@@ -85,7 +85,7 @@ class TagihanController extends Controller
             'TGL_BAYAR'   => 'sometimes|date',
         ]);
 
-        $data->update($request->all());
+        dd($request->all());
 
         $data->refresh();
 
