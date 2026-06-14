@@ -148,6 +148,7 @@ class TagihanController extends Controller
             $potongan = 0;
             $totalTagihan = $km->kategoriUkt->NOMINAL_UKT;
             $statusBayar = 'Belum Bayar';
+            $nominalCicilan = $km->kategoriUkt->NOMINAL_UKT;
 
             if ($km->BEASISWA === 'KIPK') {
 
