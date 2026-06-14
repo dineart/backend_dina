@@ -86,6 +86,27 @@ class TagihanController extends Controller
         ]);
 
         $data->update($request->all());
+
+        $keuangan = KeuanganMahasiswa::find(
+            $data->ID_KEUANGAN_MHS
+        );
+
+        if ($keuangan) {
+
+            if (
+                $data->STATUS_BAYAR == 'LUNAS' ||
+                $data->STATUS_BAYAR == 'CICILAN'
+            ) {
+                $keuangan->update([
+                    'STATUS_AKTIF' => 'AKTIF'
+                ]);
+            } else {
+                $keuangan->update([
+                    'STATUS_AKTIF' => 'TIDAK AKTIF'
+                ]);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Tagihan berhasil diupdate',
