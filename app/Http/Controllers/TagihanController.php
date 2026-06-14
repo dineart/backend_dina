@@ -89,9 +89,10 @@ class TagihanController extends Controller
 
         $data->refresh();
 
-        $keuangan = KeuanganMahasiswa::find(
+        $keuangan = KeuanganMahasiswa::where(
+            'ID_KEUANGAN_MHS',
             $data->ID_KEUANGAN_MHS
-        );
+        )->first();
 
         if ($keuangan) {
 
