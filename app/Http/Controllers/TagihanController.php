@@ -86,6 +86,7 @@ class TagihanController extends Controller
         ]);
 
         dd($request->all());
+        $data->update($request->all());
 
         $data->refresh();
 
