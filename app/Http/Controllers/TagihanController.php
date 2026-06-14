@@ -149,10 +149,11 @@ class TagihanController extends Controller
             $totalTagihan = $km->kategoriUkt->NOMINAL_UKT;
             $statusBayar = 'Belum Bayar';
 
-            if ($km->BEASISWA = 'KIPK') {
+            if ($km->BEASISWA === 'KIPK') {
 
                 $potongan = $km->kategoriUkt->NOMINAL_UKT;
                 $totalTagihan = 0;
+                $nominalCicilan = 0;
                 $statusBayar = 'LUNAS';
 
                 $km->update([
@@ -171,7 +172,7 @@ class TagihanController extends Controller
                 'NOMOR_CICILAN'   => 1,
                 'TOTAL_CICILAN'   => 1,
 
-                'NOMINAL_CICILAN' => $km->kategoriUkt->NOMINAL_UKT,
+                'NOMINAL_CICILAN' => $nominalCicilan,
 
                 'POTONGAN'        => $potongan,
 
