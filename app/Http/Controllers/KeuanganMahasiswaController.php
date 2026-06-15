@@ -201,7 +201,8 @@ class KeuanganMahasiswaController extends Controller
 
     public function statusAktif($id_mahasiswa)
     {
-        $data = KeuanganMahasiswa::with('kategoriUkt')
+        $data = KeuanganMahasiswa::without('mahasiswa')
+                ->with('kategoriUkt')
                 ->where('ID_MAHASISWA', $id_mahasiswa)
                 ->first();
 
