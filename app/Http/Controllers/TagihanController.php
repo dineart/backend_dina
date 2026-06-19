@@ -118,6 +118,17 @@ class TagihanController extends Controller
         ]);
     }
 
+    public function riwayatPembayaran($idMahasiswa)
+    {
+        $data = Tagihan::with('keuanganMahasiswa')
+                ->whereHas('keuanganMahasiswa', function ($q) use ($idMahasiswa) {
+                    $q->where('ID_MAHASISWA', $idMahasiswa);
+                })
+                ->get();
+
+        return response()->json(['success' => true, 'data' => $data]);
+    }
+
     public function destroy($id)
     {
         $data = Tagihan::find($id);
