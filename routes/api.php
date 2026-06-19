@@ -30,4 +30,10 @@ Route::middleware(['jwt.auth'])->group(function () {
         'tagihan/generate',
         [TagihanController::class, 'generateTagihan']
     );
+
+    // Endpoint untuk riwayat pembayaran
+    Route::get(
+        'riwayat-pembayaran/{id_mahasiswa}',
+        [TagihanController::class, 'riwayatPembayaran']
+    );
 });
